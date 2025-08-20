@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Executar Módulo Principal",
+      "type": "python",
+      "request": "launch",
+      "module": "Programa_principal.Programa_Principal",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
