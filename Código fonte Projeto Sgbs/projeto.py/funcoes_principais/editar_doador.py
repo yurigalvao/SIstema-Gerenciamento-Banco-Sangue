@@ -3,13 +3,25 @@ from funcoes_principais.config import caminho_doadores
 from funcoes_principais.interface import *
 
 def editar_doador():
+    """
+    Permite editar os dados de um doador existente.
+
+    A função solicita o CPF do doador para localizá-lo. Se o doador for encontrado,
+    um menu de opções é exibido para que o usuário possa escolher qual campo
+    (nome, idade, peso, etc.) deseja editar. As alterações são salvas apenas
+    se alguma modificação for realizada.
+    """
     limpar_tela()
     cabecalho('Editar Doador'.center(45))
     print(linha())
 
+    # 1 - Carrega todos os dados dos doadores do arquivo JSON
     doadores = carregar_dados(caminho_doadores)
+
+    # 2 - Solicita o CPF do doador para edição
     cpf = str(leiaint('Digite o CPF do doador que deseja editar: '))
 
+    # 3 - Verifica se o CPF existe no dicionário de doadores
     if cpf not in doadores:
         print('Doador não encontrado.')
         print(linha())
@@ -18,8 +30,10 @@ def editar_doador():
         print(f'Edição do doador: {doadores[cpf]["nome"]}')
         print(linha())
 
+        # Flag para controlar se alguma alteração foi feita
         mudou_dados = False
 
+        # Loop para o menu de edição, permite múltiplas edições na mesma sessão
         while True:
             print('Selecione o campo que deseja editar: ')
             print('1 - Nome')
@@ -33,6 +47,7 @@ def editar_doador():
             opcao = leiaint('Escolha uma opção: ')
             print(linha())
 
+            # Ações baseadas na escolha do usuário
             if opcao == 1:
                 novo_nome = input('Digite o nome atualizado do Doador: ')
                 doadores[cpf]["nome"] = novo_nome
@@ -69,10 +84,14 @@ def editar_doador():
                 mudou_dados = True
                 print('Email atualizado com sucesso.')  
             elif opcao == 8:
+                # Sai do loop de edição
                 break
+            else:
+                print('Opção inválida. Por favor, selecione uma opção válida.')
 
             print(linha())
         
+        # 4 - Salva os dados no arquivo apenas se alguma alteração foi feita
         if mudou_dados:
             salvar_dados(caminho_doadores, doadores)
             print('Dados do doador atualizados com sucesso.')

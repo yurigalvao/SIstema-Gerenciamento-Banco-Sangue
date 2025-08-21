@@ -4,11 +4,15 @@ import json
 
 def verifica_arquivo(nome_arquivo, conteudo_padrao):
     """
-    Verifica se um arquivo existe, se não existir, cria o arquivo com um conteúdo padrão.
+    Verifica a existência de um arquivo e o cria com conteúdo padrão se não existir.
+
+    Esta função tenta abrir o arquivo em modo de leitura. Se um FileNotFoundError
+    (erro comum quando o arquivo não existe) for capturado, ela cria o arquivo
+    e escreve o conteúdo padrão fornecido.
 
     Args:
-        nome_arquivo (str): O nome do arquivo a ser verificado.
-        conteudo_padrao (dict): O conteúdo padrão a ser escrito no arquivo, se necessário.
+        nome_arquivo (str): O caminho e nome do arquivo a ser verificado.
+        conteudo_padrao (dict): Um dicionário com o conteúdo JSON inicial.
     """
     try:
         with open(nome_arquivo, 'r') as arquivo:
@@ -23,10 +27,14 @@ def verifica_arquivo(nome_arquivo, conteudo_padrao):
 def salvar_dados(nome_arquivo, dados):
     """
     Salva um dicionário Python em um arquivo JSON.
-    O modo 'w' garante que o arquivo seja reescrito com a versão mais recente dos dados.
-    #Args:
-    nome_arquivo (str): O caminho e o nome do arquivo onde os dados serão salvos.
-        dados (dict): O dicionário com os dados a serem salvos.
+
+    Esta função sobrescreve o arquivo existente com os dados mais recentes.
+    Ela utiliza um bloco try-except para capturar e tratar possíveis erros
+    de I/O (entrada/saída de arquivo) ou outros erros inesperados.
+
+    Args:
+        nome_arquivo (str): O caminho completo e o nome do arquivo JSON onde os dados serão salvos.
+        dados (dict): O dicionário Python contendo os dados a serem salvos.
     """
     try:
         with open(nome_arquivo, 'w') as arquivo:
@@ -42,12 +50,18 @@ def carregar_dados(nome_arquivo):
     """
     Carrega dados de um arquivo JSON para um dicionário Python.
 
+    Esta função lê o conteúdo de um arquivo JSON e o converte para um dicionário.
+    Ela trata três possíveis erros:
+    - FileNotFoundError: se o arquivo não existir.
+    - json.JSONDecodeError: se o arquivo JSON estiver corrompido ou mal formatado.
+    - Exception: para qualquer outro erro inesperado.
+
     Args:
-        nome_arquivo (str): O caminho e o nome do arquivo a ser lido.
+        nome_arquivo (str): O caminho completo e o nome do arquivo a ser lido.
 
     Returns:
-    dict: O dicionário com os dados do arquivo, ou um dicionário vazio
-    se o arquivo não for encontrado ou estiver corrompido.
+        dict: O dicionário com os dados do arquivo. Retorna um dicionário vazio
+            se o arquivo não for encontrado ou estiver corrompido.
     """
     try:
         with open(nome_arquivo, 'r') as arquivo:
@@ -66,6 +80,16 @@ def carregar_dados(nome_arquivo):
 
 
 def inicializar_estoque(nome_arquivo):
+    """
+    Inicializa o arquivo de estoque com valores padrão para cada tipo sanguíneo.
+
+    Esta função verifica se o arquivo de estoque de sangue já existe. Se não
+    existir, ela cria um novo arquivo JSON com todos os tipos sanguíneos
+    (A+, A-, B+, etc.) e seus respectivos estoques iniciais zerados.
+
+    Args:
+        nome_arquivo (str): O caminho completo e o nome do arquivo JSON do estoque a ser inicializado.
+    """
     if not os.path.exists(nome_arquivo):
         estoque_inicial = {
             "A+": 0,

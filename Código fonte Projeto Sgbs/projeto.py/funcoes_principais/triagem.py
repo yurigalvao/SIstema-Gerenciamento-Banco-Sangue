@@ -3,7 +3,8 @@ from uteis.arquivos import carregar_dados, salvar_dados
 from funcoes_principais.interface import *
 from datetime import date
 
-
+# Lista de condições que impedem a doação. A lista é um tupla de tuplas,
+# onde cada tupla contém o nome da condição e uma descrição.
 CONDICOES_IMPEDITIVAS = (
     ('HIV', 'AIDS'),
     ('HEPATITE', 'Hepatite B, C, ou qualquer tipo de icterícia após os 10 anos de idade.'),
@@ -57,6 +58,7 @@ def triagem():
         data_de_hoje = date.today().strftime('%d/%m/%Y')
         nova_triagem = {'data': data_de_hoje}
 
+        # 5 - Primeira condição de triagem: Documentos
         documento = leiaint('Está com todos os documentos necessários? (1 - Sim/2 - Não): ')
         if documento != 1:
             nova_triagem['documentos'] = 'Doador nao trouxe os documentos necessários'
@@ -64,11 +66,12 @@ def triagem():
             print('O doador nao trouxe a doxumentação necessária! Favor tente novamente em outro dia!.')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
+            return # Reprova e encerra a triagem
         else:
             nova_triagem['documentos'] = 'Doador com toda a documentacao necessaria'
             print('Requisito atendido com sucesso!')
-            
+
+        # 6 - Segunda condição de triagem: Saúde Geral
         saude_boa = leiaint('Você está se sentindo bem hoje? (1 - Sim/2 - Não): ')
         if saude_boa == 1:
             nova_triagem['saude'] = 'Boa'
@@ -79,8 +82,9 @@ def triagem():
             print('Triagem encerrada por questão de saúde. Favor tente novamente em outro dia!.')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
-        
+            return # Reprova e encerra a triagem
+
+        # 7 - Terceira condição de triagem: Horas de Sono
         horas_dormidas = leiaint('Dormiu pelo menos 6h nas últimas 24h? (1- Sim/2 - Não): ')
         if horas_dormidas != 1:
             nova_triagem['sono'] = 'Insuficiente'
@@ -88,11 +92,12 @@ def triagem():
             print('O doador não atende ao requisito sono! Favor tente novamente em outro dia!.')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
+            return # Reprova e encerra a triagem
         else:
             nova_triagem['sono'] = 'Suficiente'
             print('Requisito atendido com sucesso!')
 
+        # 8 - Quarta condição de triagem: Ingestão de Álcool
         ingeriu_alcool = leiaint('Ingeriu bebidas alcoólicas nas últimas 12h? (1 - Sim/2 - Não): ')
         if ingeriu_alcool == 1:
             nova_triagem['alcool'] = 'Sim'
@@ -100,11 +105,12 @@ def triagem():
             print('O doador não atende ao requisito álcool! Favor tente novamente em outro dia!.')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
+            return # Reprova e encerra a triagem
         else:
             nova_triagem['alcool'] = 'Não'
             print('Requisito atendido com sucesso!')
 
+        # 9 - Quinta condição de triagem: Fumo
         fumo = leiaint('Fumou nas últimas 2h? (1 - Sim/2 - Não): ')
         if fumo == 1:
             nova_triagem['fumo'] = 'Sim'
@@ -112,12 +118,12 @@ def triagem():
             print('O doador não atende ao requisito fumo! Favor tente novamente em outro dia!.')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
+            return # Reprova e encerra a triagem
         else:
             nova_triagem['fumo'] = 'Não'
             print('Requisito atendido com sucesso!')
 
-        # Verificacao de primeira doacao (com a correcao)
+        # 10 - Sexta condição de triagem: Primeira Doação (com a correção)
         primeira_doacao = leiaint('É a sua primeira doação? (1 - Sim/2 - Não): ')
         nova_triagem['primeira_doacao'] = (primeira_doacao == 1) 
 
@@ -127,7 +133,7 @@ def triagem():
                 print('O doador não pode realizar a primeira doação com mais de 60 anos!')
                 doadores[cpf]['triagem'].append(nova_triagem)
                 salvar_dados(caminho_doadores, doadores)
-                return
+                return # Reprova e encerra a triagem
             else:
                 print('Idade válida para primeira doação!')
         else:
@@ -139,6 +145,7 @@ def triagem():
             print(f' - {condicao.capitalize()}: {descricao}')
         print(linha())
 
+        # 11 - Sétima condição de triagem: Doença Impeditiva
         doenca_impeditiva = leiaint('Você possui alguma dessas condições? (1 - Sim/2 - Não): ')
         if doenca_impeditiva == 1:
             nova_triagem['doenca_impeditiva'] = 'Sim'
@@ -146,12 +153,12 @@ def triagem():
             print('O doador possui uma doença/condição impeditiva para doação!')
             doadores[cpf]['triagem'].append(nova_triagem)
             salvar_dados(caminho_doadores, doadores)
-            return
+            return # Reprova e encerra a triagem
         else:
             nova_triagem['doenca_impeditiva'] = 'Não'
             print('Nenhuma doença impeditiva declarada!')
 
-        
+        # 12 - Finaliza a triagem com aprovação, salvando o status no histórico
         print(linha())
         print('Parabéns! Você atende a todos os requisitos da Triagem!')
         nova_triagem['status'] = 'Aprovado'

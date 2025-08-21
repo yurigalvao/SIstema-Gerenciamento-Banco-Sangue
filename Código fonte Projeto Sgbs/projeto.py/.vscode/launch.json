@@ -1,12 +1,29 @@
 {
+  // A versão do formato do arquivo de configuração de inicialização
   "version": "0.2.0",
   "configurations": [
     {
+      // O nome que aparece no menu de depuração do VS code
+      // É uma descrição para você saber qual configuração está sendo usada
       "name": "Executar Módulo Principal",
+
+      // O tipo de depuração a ser utilizado
       "type": "python",
+
+      // O modo de solicitação de depuração
       "request": "launch",
+
+      // O módulo Python a ser executado. O VS Code vai procurar e rodar esse arquivo.
+      // "Programa_principal.Programa_Principal" pode ser um caminho que o VS Code entende.
       "module": "Programa_principal.Programa_Principal",
+
+      // O diretório de trabalho atual. O valor "${workspaceFolder}" aponta para a
+      // raiz do projeto que está aberto no VS Code. Isso é crucial para que
+      // o programa encontre os arquivos e pastas corretamente.
       "cwd": "${workspaceFolder}",
+
+       // Onde a saída do programa será exibida. "integratedTerminal" usa o terminal
+      // que já está embutido no VS Code.
       "console": "integratedTerminal"
     }
   ]
